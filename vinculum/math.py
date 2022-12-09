@@ -66,3 +66,20 @@ def int_to_buffer(
             buffer.write(recurring_prefix)
 
         buffer.write(c)
+
+
+def string_to_int(string: str) -> int:
+    """
+    Converts `string` to an integer.
+
+    Avoids CVE-2020-10735: https://github.com/python/cpython/issues/95778
+    """
+
+    result = 0
+    string_len = len(string)
+
+    for index, digit in enumerate(string):
+        e = string_len - (index + 1)
+        result += int(digit) * (10**e)
+
+    return result

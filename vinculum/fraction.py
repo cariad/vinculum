@@ -3,10 +3,16 @@ from __future__ import annotations
 from io import StringIO
 from locale import localeconv
 from math import modf
-from typing import Any, List, Optional
+from re import compile  # pylint: disable=redefined-builtin
+from typing import Any, List, Optional, cast
 
 from vinculum.log import log
-from vinculum.math import greatest_common_divisor, int_to_buffer
+from vinculum.math import greatest_common_divisor, int_to_buffer, string_to_int
+
+DECIMAL_POINT = str(localeconv()["decimal_point"])
+
+DECIMAL_PATTERN = compile(rf"^(-?\d+)(?:\{DECIMAL_POINT}(\d+))?$")
+FRACTION_PATTERN = compile(r"^(\d+)/(\d+)$")
 
 
 class Fraction:
@@ -161,8 +167,7 @@ class Fraction:
 
         int_to_buffer(integral, result)
 
-        decimal_point = str(localeconv()["decimal_point"])
-        result.write(decimal_point)
+        result.write(DECIMAL_POINT)
 
         recursion_track: Optional[List[int]] = [] if recursion else None
         remainder = (abs(self._numerator) % self._denominator) * 10
@@ -243,6 +248,68 @@ class Fraction:
             over *= 10
 
         return result
+
+    @classmethod
+    def from_string(cls, string: str) -> Fraction:
+        """
+        Parses `string` as either a decimal or fraction.
+        """
+
+        match = DECIMAL_PATTERN.match(string)
+        if match is not None:
+            log.debug('Parsing "%s" as a decimal', string)
+
+            groups = match.groups(0)
+
+            i = string_to_int(cast(str, groups[0]))
+            integral = Fraction(i)
+
+            decimal_group = groups[1]
+
+            log.debug(
+                'The decimal group of "%s" is %s (%s)',
+                string,
+                decimal_group,
+                decimal_group.__class__.__name__,
+            )
+
+            if decimal_group == 0:
+                decimal = Fraction(0)
+            else:
+                d = cast(str, decimal_group)
+                decimal = Fraction(string_to_int(d), 10 ** len(d))
+
+            return (integral + decimal).reduced
+
+        match = FRACTION_PATTERN.match(string)
+        if match is not None:
+            log.debug('Parsing "%s" as a fraction', string)
+
+            groups = match.groups(0)
+            numerator_group = groups[0]
+
+            log.debug(
+                'The numerator group of "%s" is %s (%s)',
+                string,
+                numerator_group,
+                numerator_group.__class__.__name__,
+            )
+
+            denominator_group = groups[1]
+
+            log.debug(
+                'The denominator group of "%s" is %s (%s)',
+                string,
+                denominator_group,
+                denominator_group.__class__.__name__,
+            )
+
+            return Fraction(
+                string_to_int(cast(str, numerator_group)),
+                string_to_int(cast(str, denominator_group)),
+            )
+
+        raise ValueError(f'Cannot parse "{string}" as decimal or fraction')
 
     @property
     def numerator(self) -> int:

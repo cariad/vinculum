@@ -105,6 +105,18 @@ def test_floordiv(a: Fraction, b: Any, expect: Fraction) -> None:
 
 
 @mark.parametrize(
+    "f, expect",
+    [
+        (Fraction(0), Fraction(0)),
+        (Fraction(1), Fraction(0)),
+        (Fraction(3, 2), Fraction(1, 2)),
+    ],
+)
+def test_fractional(f: Fraction, expect: Fraction) -> None:
+    assert f.fractional == expect
+
+
+@mark.parametrize(
     "value, expect",
     [
         (2, Fraction(2, 1)),

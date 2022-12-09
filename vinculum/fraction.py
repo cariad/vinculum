@@ -24,8 +24,7 @@ class Fraction:
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Fraction):
-            a = self.reduced
-            b = other.reduced
+            a, b = Fraction.comparable(self, other)
 
             return (
                 a.numerator == b.numerator and a.denominator == b.denominator
@@ -40,6 +39,26 @@ class Fraction:
         )
 
         return False
+
+    @staticmethod
+    def comparable(a: Fraction, b: Fraction) -> tuple[Fraction, Fraction]:
+        """
+        Converts fractions `a` and `b` to the same denominator.
+        """
+
+        if a.denominator == b.denominator:
+            return a, b
+
+        return (
+            Fraction(
+                a.numerator * b.denominator,
+                a.denominator * b.denominator,
+            ),
+            Fraction(
+                b.numerator * a.denominator,
+                b.denominator * a.denominator,
+            ),
+        )
 
     @property
     def denominator(self) -> int:

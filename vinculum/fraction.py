@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from io import StringIO
+from locale import localeconv
 from math import modf
-from typing import Any
+from typing import Any, List, Optional
 
-from vinculum.math import greatest_common_divisor
+from vinculum.log import log
+from vinculum.math import greatest_common_divisor, int_to_buffer
 
 
 class Fraction:
@@ -116,6 +119,85 @@ class Fraction:
 
         value = Fraction.from_any(value)
         return Fraction.comparable(self, value)
+
+    def decimal(
+        self,
+        max_dp: int = 100,
+        recursion: bool = True,
+        recurring_prefix: Optional[str] = "\u0307",
+    ) -> str:
+        """
+        Gets the fraction as a decimal string appropriate to the local culture.
+        For example, 3/2 in the United Kingdom is rendered as "1.5".
+
+        Recurring digits are represented by overhead dots. For example, 1/3
+        returns 0.̇3.
+
+        This function is aware of and avoids CVE-2020-10735:
+        https://github.com/python/cpython/issues/95778
+
+        `max_dp` describes the maximum number of decimal places to render. This
+        is limited only by your available memory and patience.
+
+        `recursion` describes whether or not to track recursion. There is a
+        slight performance benefit to disabling this if you don't care.
+
+        `recurring_prefix` describes the string with which to prefix each
+        recurring digit. This is \u0307 (the Unicode "Dot Above" character) by
+        default, but you might prefer \u0305 ("Combining Overline").
+        """
+
+        log.debug("Rendering %s to a decimal string", self)
+
+        result = StringIO()
+
+        positive = self._numerator >= 0
+
+        integral = abs(self._numerator) // self._denominator
+        if not positive:
+            integral *= -1
+
+        result = StringIO()
+
+        int_to_buffer(integral, result)
+
+        decimal_point = str(localeconv()["decimal_point"])
+        result.write(decimal_point)
+
+        recursion_track: Optional[List[int]] = [] if recursion else None
+        remainder = (abs(self._numerator) % self._denominator) * 10
+
+        fractional = 0
+        recurring_count = 0
+        decimal_places = 0
+
+        while True:
+            i = remainder // self._denominator
+            remainder = (remainder % self._denominator) * 10
+
+            if recursion_track is not None and (remainder in recursion_track):
+                index_of = recursion_track.index(remainder)
+                recurring_count = len(recursion_track) - index_of
+                break
+
+            fractional *= 10
+            fractional += i
+            decimal_places += 1
+
+            if remainder == 0 or decimal_places >= max_dp:
+                break
+
+            if recursion_track is not None:
+                recursion_track.append(remainder)
+
+        int_to_buffer(
+            fractional,
+            result,
+            recurring_count=recurring_count,
+            recurring_prefix=recurring_prefix,
+        )
+
+        return result.getvalue()
 
     @property
     def denominator(self) -> int:

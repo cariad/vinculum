@@ -3,6 +3,25 @@ from pytest import mark
 from vinculum import Fraction
 
 
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (
+            Fraction(0),
+            Fraction(0),
+            (Fraction(0), Fraction(0)),
+        ),
+        (
+            Fraction(3, 2),
+            Fraction(15, 30),
+            (Fraction(90, 60), Fraction(30, 60)),
+        ),
+    ],
+)
+def test_comparable(a: Fraction, b: Fraction, expect: Fraction) -> None:
+    assert Fraction.comparable(a, b) == expect
+
+
 def test_eq__unhandled_type() -> None:
     assert Fraction(0) != "zero"
 

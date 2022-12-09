@@ -11,6 +11,7 @@ from vinculum import Fraction
         (Fraction(2, 3), 1, Fraction(5, 3)),
         (Fraction(2, 3), 1.5, Fraction(13, 6)),
         (Fraction(2, 3), Fraction(4, 6), Fraction(4, 3)),
+        (Fraction(1, 4), Fraction(-1, 2), Fraction(-1, 4)),
     ],
 )
 def test_add(a: Fraction, b: Any, expect: Fraction) -> None:
@@ -230,3 +231,23 @@ def test_reduced(f: Fraction, expect: Fraction) -> None:
 
 def test_repr() -> None:
     assert repr(Fraction(2, 3)) == "2/3"
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (1, Fraction(2, 3), Fraction(1, 3)),
+    ],
+)
+def test_rsub(a: Any, b: Fraction, expect: Fraction) -> None:
+    assert a - b == expect
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (Fraction(4, 3), 1, Fraction(1, 3)),
+    ],
+)
+def test_sub(a: Fraction, b: Any, expect: Fraction) -> None:
+    assert a - b == expect

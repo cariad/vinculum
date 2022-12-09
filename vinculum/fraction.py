@@ -18,6 +18,8 @@ class Fraction:
     def denominator(self) -> int:
         """
         Denominator.
+
+        For example, given the fraction 3/2, the denominator is "2".
         """
 
         return self._denominator
@@ -26,6 +28,8 @@ class Fraction:
     def numerator(self) -> int:
         """
         Numerator.
+
+        For example, given the fraction 3/2, the numerator is "3".
         """
 
         return self._numerator

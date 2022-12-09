@@ -7,6 +7,7 @@ For usage and support, see https://github.com/cariad/vinculum.
 from importlib.resources import files
 
 from vinculum.fraction import Fraction
+from vinculum.math import greatest_common_divisor
 
 
 def version() -> str:
@@ -20,5 +21,6 @@ def version() -> str:
 
 __all__ = [
     "Fraction",
+    "greatest_common_divisor",
     "version",
 ]

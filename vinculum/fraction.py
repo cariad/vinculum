@@ -47,6 +47,14 @@ class Fraction:
         a, b = self.comparable_with_self(other)
         return a.numerator < b.numerator
 
+    def __mul__(self, other: Any) -> Fraction:
+        other = Fraction.from_any(other)
+        result = Fraction(
+            self.numerator * other.numerator,
+            self.denominator * other.denominator,
+        )
+        return result.reduced
+
     def __repr__(self) -> str:
         return f"{self._numerator}/{self._denominator}"
 
@@ -73,23 +81,10 @@ class Fraction:
     def comparable_with_self(self, value: Any) -> tuple[Fraction, Fraction]:
         """
         Converts this and `value` to Fractions of the same denominator.
-
-        Raises `TypeError` if `value` cannot be converted to a Fraction.
         """
 
-        if isinstance(value, int):
-            value = Fraction(value)
-
-        if isinstance(value, float):
-            value = Fraction.from_float(value)
-
-        if isinstance(value, Fraction):
-            return Fraction.comparable(self, value)
-
-        raise TypeError(
-            f"Cannot compare {self} ({self.__class__.__name__}) with "
-            f"{repr(value)} ({value.__class__.__name__})"
-        )
+        value = Fraction.from_any(value)
+        return Fraction.comparable(self, value)
 
     @property
     def denominator(self) -> int:
@@ -100,6 +95,28 @@ class Fraction:
         """
 
         return self._denominator
+
+    @classmethod
+    def from_any(cls, value: Any) -> Fraction:
+        """
+        Converts `value` to a Fraction.
+
+        Raises `TypeError` if `value` cannot be converted to a Fraction.
+        """
+
+        if isinstance(value, int):
+            return Fraction(value)
+
+        if isinstance(value, float):
+            return Fraction.from_float(value)
+
+        if isinstance(value, Fraction):
+            return value
+
+        raise TypeError(
+            f"Cannot create a Fraction from {repr(value)} "
+            f"({value.__class__.__name__})"
+        )
 
     @classmethod
     def from_float(cls, f: float) -> Fraction:

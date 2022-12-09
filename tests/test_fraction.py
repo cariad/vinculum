@@ -73,6 +73,16 @@ def test_eq(a: Fraction, b: Any, expect: bool) -> None:
 
 
 @mark.parametrize(
+    "a, b, expect",
+    [
+        (Fraction(4, 3), Fraction(4, 6), Fraction(2)),
+    ],
+)
+def test_floordiv(a: Fraction, b: Any, expect: Fraction) -> None:
+    assert a / b == expect
+
+
+@mark.parametrize(
     "value, expect",
     [
         (2, Fraction(2, 1)),
@@ -227,6 +237,10 @@ def test_radd(a: Any, b: Fraction, expect: Fraction) -> None:
     assert a + b == expect
 
 
+def test_reciprocal() -> None:
+    assert Fraction(2, 3).reciprocal == Fraction(3, 2)
+
+
 @mark.parametrize(
     "f, expect",
     [
@@ -242,6 +256,16 @@ def test_reduced(f: Fraction, expect: Fraction) -> None:
 
 def test_repr() -> None:
     assert repr(Fraction(2, 3)) == "2/3"
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (Fraction(100), Fraction(2, 19), Fraction(950)),
+    ],
+)
+def test_rfloordiv(a: Any, b: Fraction, expect: Fraction) -> None:
+    assert a / b == expect
 
 
 @mark.parametrize(
@@ -276,8 +300,28 @@ def test_rsub(a: Any, b: Fraction, expect: Fraction) -> None:
 @mark.parametrize(
     "a, b, expect",
     [
+        (4, Fraction(1, 2), Fraction(8)),
+    ],
+)
+def test_rtruediv(a: Any, b: Fraction, expect: Fraction) -> None:
+    assert a / b == expect
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
         (Fraction(4, 3), 1, Fraction(1, 3)),
     ],
 )
 def test_sub(a: Fraction, b: Any, expect: Fraction) -> None:
     assert a - b == expect
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (Fraction(2, 3), Fraction(4, 6), Fraction(1)),
+    ],
+)
+def test_truediv(a: Fraction, b: Any, expect: Fraction) -> None:
+    assert a / b == expect

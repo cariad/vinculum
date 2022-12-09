@@ -76,10 +76,18 @@ class Fraction:
         f = Fraction(b.numerator - a.numerator, a.denominator)
         return f.reduced
 
+    def __rtruediv__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        return b * a.reciprocal
+
     def __sub__(self, other: Any) -> Fraction:
         a, b = self.comparable_with_self(other)
         f = Fraction(a.numerator - b.numerator, a.denominator)
         return f.reduced
+
+    def __truediv__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        return a * b.reciprocal
 
     @staticmethod
     def comparable(a: Fraction, b: Fraction) -> tuple[Fraction, Fraction]:
@@ -163,6 +171,16 @@ class Fraction:
         """
 
         return self._numerator
+
+    @property
+    def reciprocal(self) -> Fraction:
+        """
+        Gets the reciprocal of the fraction.
+
+        For example, the reciprocal of 2/3 is 3/2.
+        """
+
+        return Fraction(self.denominator, self.numerator)
 
     @property
     def reduced(self) -> Fraction:

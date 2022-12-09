@@ -58,6 +58,16 @@ class Fraction:
     def __repr__(self) -> str:
         return f"{self._numerator}/{self._denominator}"
 
+    def __rsub__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        f = Fraction(b.numerator - a.numerator, a.denominator)
+        return f.reduced
+
+    def __sub__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        f = Fraction(a.numerator - b.numerator, a.denominator)
+        return f.reduced
+
     @staticmethod
     def comparable(a: Fraction, b: Fraction) -> tuple[Fraction, Fraction]:
         """

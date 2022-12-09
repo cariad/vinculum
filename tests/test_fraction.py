@@ -56,13 +56,6 @@ def test_comparable_with_self(
     assert f.comparable_with_self(other) == expect
 
 
-def test_comparable_with_self__unhandled_type() -> None:
-    with raises(TypeError) as ex:
-        _ = Fraction(0).comparable_with_self("zero")
-
-    assert str(ex.value) == "Cannot compare 0/1 (Fraction) with 'zero' (str)"
-
-
 @mark.parametrize(
     "a, b, expect",
     [
@@ -76,6 +69,25 @@ def test_comparable_with_self__unhandled_type() -> None:
 )
 def test_eq(a: Fraction, b: Any, expect: bool) -> None:
     assert (a == b) is expect
+
+
+@mark.parametrize(
+    "value, expect",
+    [
+        (2, Fraction(2, 1)),
+        (2.5, Fraction(5, 2)),
+        (Fraction(3, 2), Fraction(3, 2)),
+    ],
+)
+def test_from_any(value: Any, expect: tuple[Fraction, Fraction]) -> None:
+    assert Fraction.from_any(value) == expect
+
+
+def test_from_any__unhandled_type() -> None:
+    with raises(TypeError) as ex:
+        _ = Fraction.from_any("zero")
+
+    assert str(ex.value) == "Cannot create a Fraction from 'zero' (str)"
 
 
 @mark.parametrize(
@@ -180,6 +192,30 @@ def test_lt(a: Fraction, b: Any, expect: bool) -> None:
 
 
 @mark.parametrize(
+    "a, b, expect",
+    [
+        (
+            Fraction(1, 2),
+            2,
+            Fraction(1),
+        ),
+        (
+            Fraction(1, 2),
+            0.25,
+            Fraction(1, 8),
+        ),
+        (
+            Fraction(1, 2),
+            Fraction(1, 4),
+            Fraction(1, 8),
+        ),
+    ],
+)
+def test_mul(a: Fraction, b: Any, expect: Fraction) -> None:
+    assert (a * b) == expect
+
+
+@mark.parametrize(
     "f, expect",
     [
         (Fraction(0), Fraction(0)),
@@ -190,3 +226,7 @@ def test_lt(a: Fraction, b: Any, expect: bool) -> None:
 )
 def test_reduced(f: Fraction, expect: Fraction) -> None:
     assert f.reduced == expect
+
+
+def test_repr() -> None:
+    assert repr(Fraction(2, 3)) == "2/3"

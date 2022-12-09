@@ -3,7 +3,6 @@ from __future__ import annotations
 from math import modf
 from typing import Any
 
-from vinculum.log import log
 from vinculum.math import greatest_common_divisor
 
 
@@ -24,39 +23,29 @@ class Fraction:
             self._numerator = self._numerator * -1
 
     def __add__(self, other: Any) -> Fraction:
-        if isinstance(other, int):
-            other = Fraction(other)
-
-        if isinstance(other, float):
-            other = Fraction.from_float(other)
-
-        if isinstance(other, Fraction):
-            a, b = Fraction.comparable(self, other)
-            f = Fraction(a.numerator + b.numerator, a.denominator)
-            return f.reduced
-
-        raise TypeError(
-            f"Cannot add {repr(other)} ({other.__class__.__name__}) to {self} "
-            f"({self.__class__.__name__})"
-        )
+        a, b = self.comparable_with_self(other)
+        f = Fraction(a.numerator + b.numerator, a.denominator)
+        return f.reduced
 
     def __eq__(self, other: Any) -> bool:
-        if isinstance(other, Fraction):
-            a, b = Fraction.comparable(self, other)
+        a, b = self.comparable_with_self(other)
+        return a.numerator == b.numerator
 
-            return (
-                a.numerator == b.numerator and a.denominator == b.denominator
-            )
+    def __ge__(self, other: Any) -> bool:
+        a, b = self.comparable_with_self(other)
+        return a.numerator >= b.numerator
 
-        log.warning(
-            "Cannot compare %s (%s) with %s (%s)",
-            self,
-            self.__class__.__name__,
-            repr(other),
-            other.__class__.__name__,
-        )
+    def __gt__(self, other: Any) -> bool:
+        a, b = self.comparable_with_self(other)
+        return a.numerator > b.numerator
 
-        return False
+    def __le__(self, other: Any) -> bool:
+        a, b = self.comparable_with_self(other)
+        return a.numerator <= b.numerator
+
+    def __lt__(self, other: Any) -> bool:
+        a, b = self.comparable_with_self(other)
+        return a.numerator < b.numerator
 
     def __repr__(self) -> str:
         return f"{self._numerator}/{self._denominator}"
@@ -79,6 +68,27 @@ class Fraction:
                 b.numerator * a.denominator,
                 b.denominator * a.denominator,
             ),
+        )
+
+    def comparable_with_self(self, value: Any) -> tuple[Fraction, Fraction]:
+        """
+        Converts this and `value` to Fractions of the same denominator.
+
+        Raises `TypeError` if `value` cannot be converted to a Fraction.
+        """
+
+        if isinstance(value, int):
+            value = Fraction(value)
+
+        if isinstance(value, float):
+            value = Fraction.from_float(value)
+
+        if isinstance(value, Fraction):
+            return Fraction.comparable(self, value)
+
+        raise TypeError(
+            f"Cannot compare {self} ({self.__class__.__name__}) with "
+            f"{repr(value)} ({value.__class__.__name__})"
         )
 
     @property

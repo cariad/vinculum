@@ -6,6 +6,8 @@ For usage and support, see https://github.com/cariad/vinculum.
 
 from importlib.resources import files
 
+from vinculum.fraction import Fraction
+
 
 def version() -> str:
     """
@@ -17,5 +19,6 @@ def version() -> str:
 
 
 __all__ = [
+    "Fraction",
     "version",
 ]

@@ -1,0 +1,8 @@
+site_name: Vinculum
+site_url: https://vinculumpy.dev/
+
+nav:
+  - index.md
+
+theme:
+  name: material

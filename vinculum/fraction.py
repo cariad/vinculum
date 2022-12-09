@@ -1,3 +1,11 @@
+from __future__ import annotations
+
+from typing import Any
+
+from vinculum.log import log
+from vinculum.math import greatest_common_divisor
+
+
 class Fraction:
     """
     A fractional number.
@@ -13,6 +21,25 @@ class Fraction:
         if self._denominator < 0:
             self._denominator = abs(self._denominator)
             self._numerator = self._numerator * -1
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, Fraction):
+            a = self.reduced
+            b = other.reduced
+
+            return (
+                a.numerator == b.numerator and a.denominator == b.denominator
+            )
+
+        log.warning(
+            "Cannot check if %s (%s) equals %s (%s)",
+            self,
+            self.__class__.__name__,
+            other,
+            other.__class__.__name__,
+        )
+
+        return False
 
     @property
     def denominator(self) -> int:
@@ -33,3 +60,21 @@ class Fraction:
         """
 
         return self._numerator
+
+    @property
+    def reduced(self) -> Fraction:
+        """
+        Gets the fraction in its reduced form.
+
+        For example, 15/30 reduces to 1/2.
+        """
+
+        gcf = greatest_common_divisor(self._numerator, self._denominator)
+
+        if gcf in (0, 1):
+            return self
+
+        return Fraction(
+            self._numerator // gcf,
+            self._denominator // gcf,
+        )

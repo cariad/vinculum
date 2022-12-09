@@ -1,5 +1,7 @@
 # Vinculum
 
+[![codecov](https://codecov.io/gh/cariad/vinculum/branch/main/graph/badge.svg?token=qo774jjX0W)](https://codecov.io/gh/cariad/vinculum)
+
 **Vinculum** is a Python package for handling large numbers with high precision.
 
 ## Examples

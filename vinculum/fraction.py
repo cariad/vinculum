@@ -55,8 +55,21 @@ class Fraction:
         )
         return result.reduced
 
+    def __radd__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        f = Fraction(b.numerator + a.numerator, a.denominator)
+        return f.reduced
+
     def __repr__(self) -> str:
         return f"{self._numerator}/{self._denominator}"
+
+    def __rmul__(self, other: Any) -> Fraction:
+        other = Fraction.from_any(other)
+        result = Fraction(
+            other.numerator * self.numerator,
+            other.denominator * self.denominator,
+        )
+        return result.reduced
 
     def __rsub__(self, other: Any) -> Fraction:
         a, b = self.comparable_with_self(other)

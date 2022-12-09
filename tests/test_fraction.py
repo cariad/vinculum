@@ -1,6 +1,39 @@
-from pytest import mark
+from typing import Any
+
+from pytest import mark, raises
 
 from vinculum import Fraction
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (
+            Fraction(2, 3),
+            1,
+            Fraction(5, 3),
+        ),
+        (
+            Fraction(2, 3),
+            1.5,
+            Fraction(13, 6),
+        ),
+        (
+            Fraction(2, 3),
+            Fraction(4, 6),
+            Fraction(4, 3),
+        ),
+    ],
+)
+def test_add(a: Fraction, b: Any, expect: Fraction) -> None:
+    assert a + b == expect
+
+
+def test_add__unhandled_type() -> None:
+    with raises(TypeError) as ex:
+        _ = Fraction(0) + "zero"
+
+    assert str(ex.value) == "Cannot add 'zero' (str) to 0/1 (Fraction)"
 
 
 @mark.parametrize(
@@ -24,6 +57,19 @@ def test_comparable(a: Fraction, b: Fraction, expect: Fraction) -> None:
 
 def test_eq__unhandled_type() -> None:
     assert Fraction(0) != "zero"
+
+
+@mark.parametrize(
+    "f, expect",
+    [
+        (1.0, Fraction(1)),
+        (1.5, Fraction(3, 2)),
+        (1.25, Fraction(5, 4)),
+        (-1.25, Fraction(-5, 4)),
+    ],
+)
+def test_from_float(f: float, expect: Fraction) -> None:
+    assert Fraction.from_float(f) == expect
 
 
 @mark.parametrize(

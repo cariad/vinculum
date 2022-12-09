@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from math import modf
 from typing import Any
 
 from vinculum.log import log
@@ -22,6 +23,23 @@ class Fraction:
             self._denominator = abs(self._denominator)
             self._numerator = self._numerator * -1
 
+    def __add__(self, other: Any) -> Fraction:
+        if isinstance(other, int):
+            other = Fraction(other)
+
+        if isinstance(other, float):
+            other = Fraction.from_float(other)
+
+        if isinstance(other, Fraction):
+            a, b = Fraction.comparable(self, other)
+            f = Fraction(a.numerator + b.numerator, a.denominator)
+            return f.reduced
+
+        raise TypeError(
+            f"Cannot add {repr(other)} ({other.__class__.__name__}) to {self} "
+            f"({self.__class__.__name__})"
+        )
+
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Fraction):
             a, b = Fraction.comparable(self, other)
@@ -31,14 +49,17 @@ class Fraction:
             )
 
         log.warning(
-            "Cannot check if %s (%s) equals %s (%s)",
+            "Cannot compare %s (%s) with %s (%s)",
             self,
             self.__class__.__name__,
-            other,
+            repr(other),
             other.__class__.__name__,
         )
 
         return False
+
+    def __repr__(self) -> str:
+        return f"{self._numerator}/{self._denominator}"
 
     @staticmethod
     def comparable(a: Fraction, b: Fraction) -> tuple[Fraction, Fraction]:
@@ -69,6 +90,19 @@ class Fraction:
         """
 
         return self._denominator
+
+    @classmethod
+    def from_float(cls, f: float) -> Fraction:
+        f, i = modf(f)
+        result = Fraction(int(i))
+        over = 10
+
+        while f != 0:
+            f, i = modf(f * 10)
+            result += Fraction(int(i), over)
+            over *= 10
+
+        return result
 
     @property
     def numerator(self) -> int:

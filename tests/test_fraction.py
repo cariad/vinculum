@@ -137,6 +137,35 @@ def test_from_float(f: float, expect: Fraction) -> None:
 
 
 @mark.parametrize(
+    "s, expect",
+    [
+        ("0", Fraction(0)),
+        ("0.0", Fraction(0)),
+        ("1", Fraction(1)),
+        ("1.0", Fraction(1)),
+        ("1.2", Fraction(6, 5)),
+        ("1.25", Fraction(5, 4)),
+        ("1.125", Fraction(9, 8)),
+        ("99.75", Fraction(399, 4)),
+        ("0/1", Fraction(0)),
+        ("1/1", Fraction(1)),
+        ("2/1", Fraction(2)),
+        ("2/3", Fraction(2, 3)),
+        ("123/456", Fraction(123, 456)),
+    ],
+)
+def test_from_string(s: str, expect: Fraction) -> None:
+    assert Fraction.from_string(s) == expect
+
+
+def test_from_string__unrecognised() -> None:
+    with raises(ValueError) as ex:
+        _ = Fraction.from_string("foo")
+
+    assert str(ex.value) == 'Cannot parse "foo" as decimal or fraction'
+
+
+@mark.parametrize(
     "a, b, expect",
     [
         (Fraction(7, 4), 2, False),

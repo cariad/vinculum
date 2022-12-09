@@ -40,6 +40,11 @@ class Fraction:
         a, b = self.comparable_with_self(other)
         return a.numerator == b.numerator
 
+    def __floordiv__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        true_result = a * b.reciprocal
+        return Fraction(true_result.integral)
+
     def __ge__(self, other: Any) -> bool:
         a, b = self.comparable_with_self(other)
         return a.numerator >= b.numerator
@@ -71,6 +76,11 @@ class Fraction:
 
     def __repr__(self) -> str:
         return f"{self._numerator}/{self._denominator}"
+
+    def __rfloordiv__(self, other: Any) -> Fraction:
+        a, b = self.comparable_with_self(other)
+        true_result = b * a.reciprocal
+        return Fraction(true_result.integral)
 
     def __rmul__(self, other: Any) -> Fraction:
         other = Fraction.from_any(other)
@@ -228,6 +238,9 @@ class Fraction:
         if isinstance(value, float):
             return Fraction.from_float(value)
 
+        if isinstance(value, str):
+            return Fraction.from_string(value)
+
         if isinstance(value, Fraction):
             return value
 
@@ -238,14 +251,25 @@ class Fraction:
 
     @classmethod
     def from_float(cls, f: float) -> Fraction:
-        f, i = modf(f)
+        log.debug("Parsing float %s", f)
+
+        positive = f >= 0
+        f = abs(f)
+
+        fractional, i = modf(f)
+
         result = Fraction(int(i))
         over = 10
 
-        while f != 0:
-            f, i = modf(f * 10)
-            result += Fraction(int(i), over)
+        while fractional != 0:
+            f *= 10
+            fractional, i = modf(f)
+            digit = int(i) % 10
+            result += Fraction(digit, over)
             over *= 10
+
+        if not positive:
+            result *= -1
 
         return result
 
@@ -310,6 +334,14 @@ class Fraction:
             )
 
         raise ValueError(f'Cannot parse "{string}" as decimal or fraction')
+
+    @property
+    def integral(self) -> int:
+        """
+        Integral.
+        """
+
+        return self._numerator // self._denominator
 
     @property
     def numerator(self) -> int:

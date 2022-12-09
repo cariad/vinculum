@@ -3,6 +3,8 @@ site_url: https://vinculumpy.dev/
 
 nav:
   - index.md
+  - fraction.md
+  - math.md
 
 theme:
   name: material

@@ -35,7 +35,7 @@ setup(
     author="Cariad Eccleston",
     author_email="cariad@cariad.earth",
     classifiers=classifiers,
-    description="Fractional numbers",
+    description="Large numbers with high precision",
     include_package_data=True,
     license="MIT",
     long_description=long_description,

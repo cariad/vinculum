@@ -97,11 +97,11 @@ def test_eq(a: Fraction, b: Any, expect: bool) -> None:
 @mark.parametrize(
     "a, b, expect",
     [
-        (Fraction(4, 3), Fraction(4, 6), Fraction(2)),
+        (Fraction(20, 4), "2.125", Fraction(2)),
     ],
 )
 def test_floordiv(a: Fraction, b: Any, expect: Fraction) -> None:
-    assert a / b == expect
+    assert a // b == expect
 
 
 @mark.parametrize(
@@ -118,15 +118,16 @@ def test_from_any(value: Any, expect: tuple[Fraction, Fraction]) -> None:
 
 def test_from_any__unhandled_type() -> None:
     with raises(TypeError) as ex:
-        _ = Fraction.from_any("zero")
+        _ = Fraction.from_any(["zero"])
 
-    assert str(ex.value) == "Cannot create a Fraction from 'zero' (str)"
+    assert str(ex.value) == "Cannot create a Fraction from ['zero'] (list)"
 
 
 @mark.parametrize(
     "f, expect",
     [
         (1.0, Fraction(1)),
+        (1.2, Fraction(6, 5)),
         (1.5, Fraction(3, 2)),
         (1.25, Fraction(5, 4)),
         (-1.25, Fraction(-5, 4)),
@@ -146,6 +147,7 @@ def test_from_float(f: float, expect: Fraction) -> None:
         ("1.2", Fraction(6, 5)),
         ("1.25", Fraction(5, 4)),
         ("1.125", Fraction(9, 8)),
+        ("2.5", Fraction(5, 2)),
         ("99.75", Fraction(399, 4)),
         ("0/1", Fraction(0)),
         ("1/1", Fraction(1)),
@@ -312,11 +314,11 @@ def test_repr() -> None:
 @mark.parametrize(
     "a, b, expect",
     [
-        (Fraction(100), Fraction(2, 19), Fraction(950)),
+        ("20/4", Fraction(17, 8), Fraction(2)),
     ],
 )
 def test_rfloordiv(a: Any, b: Fraction, expect: Fraction) -> None:
-    assert a / b == expect
+    assert a // b == expect
 
 
 @mark.parametrize(

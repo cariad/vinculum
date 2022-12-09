@@ -224,6 +224,17 @@ class Fraction:
 
         return self._denominator
 
+    @property
+    def fractional(self) -> Fraction:
+        """
+        The fractional part of this number.
+
+        For example, for 3/2, the integral part is 1 (2/2) and the fractional
+        part is 1/2.
+        """
+
+        return self - self.integral
+
     @classmethod
     def from_any(cls, value: Any) -> Fraction:
         """
@@ -338,7 +349,10 @@ class Fraction:
     @property
     def integral(self) -> int:
         """
-        Integral.
+        The integral part of this number.
+
+        For example, for 3/2, the integral part is 1 (2/2) and the fractional
+        part is 1/2.
         """
 
         return self._numerator // self._denominator

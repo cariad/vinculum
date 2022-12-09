@@ -137,6 +137,12 @@ Fraction(2, 3) <= "0.25"          # False
 Fraction(2, 3) <= "1/4"           # False
 ```
 
+## Integral and fractional parts
+
+The `integral` property returns the integral part of the number, and `fractional` returns the fractional part.
+
+For example, given `3/2`, the integral part is 1 (i.e. `2/2`) and the fractional part is `1/2`.
+
 ## Decimal string
 
 The `decimal` function returns the `Fraction` as a decimal string.

@@ -217,6 +217,17 @@ def test_mul(a: Fraction, b: Any, expect: Fraction) -> None:
 
 
 @mark.parametrize(
+    "a, b, expect",
+    [
+        (1, Fraction(2, 3), Fraction(5, 3)),
+        (1.5, Fraction(2, 3), Fraction(13, 6)),
+    ],
+)
+def test_radd(a: Any, b: Fraction, expect: Fraction) -> None:
+    assert a + b == expect
+
+
+@mark.parametrize(
     "f, expect",
     [
         (Fraction(0), Fraction(0)),
@@ -231,6 +242,25 @@ def test_reduced(f: Fraction, expect: Fraction) -> None:
 
 def test_repr() -> None:
     assert repr(Fraction(2, 3)) == "2/3"
+
+
+@mark.parametrize(
+    "a, b, expect",
+    [
+        (
+            2,
+            Fraction(1, 2),
+            Fraction(1),
+        ),
+        (
+            0.25,
+            Fraction(1, 2),
+            Fraction(1, 8),
+        ),
+    ],
+)
+def test_rmul(a: Any, b: Fraction, expect: Fraction) -> None:
+    assert (a * b) == expect
 
 
 @mark.parametrize(

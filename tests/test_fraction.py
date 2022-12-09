@@ -58,6 +58,28 @@ def test_comparable_with_self(
 
 
 @mark.parametrize(
+    "f, expect",
+    [
+        (Fraction(0), "0.0"),
+        (Fraction(1), "1.0"),
+        (Fraction(2), "2.0"),
+        (Fraction(10), "10.0"),
+        (Fraction(20), "20.0"),
+        (Fraction(-3, 2), "-1.5"),
+        (Fraction(1, 3), "0.̇3"),
+        (Fraction(2, 3), "0.̇6"),
+        (Fraction(9, 11), "0.̇8̇1"),
+    ],
+)
+def test_decimal(f: Fraction, expect: str) -> None:
+    assert f.decimal() == expect
+
+
+def test_decimal__pi() -> None:
+    assert Fraction(355, 113).decimal(max_dp=6, recursion=False) == "3.141592"
+
+
+@mark.parametrize(
     "a, b, expect",
     [
         (Fraction(7, 4), 2, False),

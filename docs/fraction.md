@@ -176,6 +176,14 @@ Also, if you prefer, you can change the overhead dot to any string by setting `r
 Fraction(1, 3).decimal(recurring_prefix="\u0305")  # "0.̅3"
 ```
 
+!!! tip
+
+    To get the true floating-point value of a `Fraction`, convert it to a `float` via Python's built-in `float()` function.
+
+    ```python
+    float(Fraction(4, 3))  # 1.3333333333333333
+    ```
+
 ## Reciprocals
 
 The `reciprocal` property returns the reciprocal of the `Fraction`.
@@ -190,4 +198,18 @@ The `reduced` property returns the `Fraction` in its most-simplified form.
 
 ```python
 Fraction(25767, 34356).reduced  # 3/4
+```
+
+## Converting to floating-point and integer numbers
+
+To get the true floating-point value of a `Fraction`, convert it to a `float` via Python's built-in `float()` function.
+
+```python
+float(Fraction(4, 3))  # 1.3333333333333333
+```
+
+Likewise, use the built-in `int()` function to get the integral value as an `int`.
+
+```python
+int(Fraction(4, 3))  # 1
 ```

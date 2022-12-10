@@ -99,6 +99,18 @@ def test_eq(a: Fraction, b: Any, expect: bool) -> None:
 
 
 @mark.parametrize(
+    "f, expect",
+    [
+        (Fraction(0), 0),
+        (Fraction(1), 1),
+        (Fraction(1, 3), 0.3333333333333333),
+    ],
+)
+def test_float(f: Fraction, expect: float) -> None:
+    assert float(f) == expect
+
+
+@mark.parametrize(
     "a, b, expect",
     [
         (Fraction(20, 4), "2.125", Fraction(2)),
@@ -233,6 +245,21 @@ def test_init(n: int, d: int, expect_n: int, expect_d: int) -> None:
     f = Fraction(n, d)
     assert f.denominator == expect_d
     assert f.numerator == expect_n
+
+
+@mark.parametrize(
+    "f, expect",
+    [
+        (Fraction(0), 0),
+        (Fraction(1), 1),
+        (Fraction(1, 2), 0),
+        (Fraction(2, 2), 1),
+        (Fraction(3, 2), 1),
+        (Fraction(5, 2), 2),
+    ],
+)
+def test_int(f: Fraction, expect: int) -> None:
+    assert int(f) == expect
 
 
 @mark.parametrize(

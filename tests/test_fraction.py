@@ -69,6 +69,10 @@ def test_comparable_with_self(
         (Fraction(1, 3), "0.̇3"),
         (Fraction(2, 3), "0.̇6"),
         (Fraction(9, 11), "0.̇8̇1"),
+        (Fraction(3, 10), "0.3"),
+        (Fraction(3, 100), "0.03"),
+        (Fraction(3, 1000), "0.003"),
+        (Fraction(303, 10000), "0.0303"),
     ],
 )
 def test_decimal(f: Fraction, expect: str) -> None:

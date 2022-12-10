@@ -40,6 +40,9 @@ class Fraction:
         a, b = self.comparable_with_self(other)
         return a.numerator == b.numerator
 
+    def __float__(self) -> float:
+        return self._numerator / self._denominator
+
     def __floordiv__(self, other: Any) -> Fraction:
         a, b = self.comparable_with_self(other)
         true_result = a * b.reciprocal
@@ -52,6 +55,9 @@ class Fraction:
     def __gt__(self, other: Any) -> bool:
         a, b = self.comparable_with_self(other)
         return a.numerator > b.numerator
+
+    def __int__(self) -> int:
+        return self.integral
 
     def __le__(self, other: Any) -> bool:
         a, b = self.comparable_with_self(other)

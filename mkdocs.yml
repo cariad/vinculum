@@ -1,10 +1,15 @@
-site_name: Vinculum
-site_url: https://vinculumpy.dev/
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 
 nav:
   - index.md
   - fraction.md
   - math.md
+
+site_name: Vinculum
+site_url: https://vinculumpy.dev/
 
 theme:
   name: material

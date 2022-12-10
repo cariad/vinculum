@@ -182,9 +182,11 @@ class Fraction:
         recursion_track: Optional[List[int]] = [] if recursion else None
         remainder = (abs(self._numerator) % self._denominator) * 10
 
-        fractional = 0
-        recurring_count = 0
+        added_non_zero = False
         decimal_places = 0
+        fractional = 0
+        leading_zeros = 0
+        recurring_count = 0
 
         while True:
             i = remainder // self._denominator
@@ -197,6 +199,12 @@ class Fraction:
 
             fractional *= 10
             fractional += i
+
+            if i > 0:
+                added_non_zero = True
+            elif not added_non_zero:
+                leading_zeros += 1
+
             decimal_places += 1
 
             if remainder == 0 or decimal_places >= max_dp:
@@ -208,6 +216,7 @@ class Fraction:
         int_to_buffer(
             fractional,
             result,
+            leading_zeros=leading_zeros,
             recurring_count=recurring_count,
             recurring_prefix=recurring_prefix,
         )

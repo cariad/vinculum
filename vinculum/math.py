@@ -26,6 +26,7 @@ def greatest_common_divisor(a: int, b: int) -> int:
 def int_to_buffer(
     number: int,
     buffer: StringIO,
+    leading_zeros: int = 0,
     recurring_count: int = 0,
     recurring_prefix: Optional[str] = "\u0307",
 ) -> None:
@@ -33,6 +34,9 @@ def int_to_buffer(
     Writes the integer `number` to string `buffer`.
 
     Avoids CVE-2020-10735: https://github.com/python/cpython/issues/95778
+
+    `leading_zeros` describes the number of leading zeros to prefix before
+    `number`.
 
     `recurring_count` describes the count of least-significant digits that
     should be formatted as recurring.
@@ -47,17 +51,20 @@ def int_to_buffer(
 
     wip: List[str] = []
 
-    if number == 0:
-        wip.append("0")
-    else:
-        e = 0
-        while (10**e) <= number:
-            digit = int(number // 10**e) % 10
-            wip.append(str(digit))
-            e += 1
+    min_leading_zeros = 1 if number == 0 else leading_zeros
+    leading_zeros = max(leading_zeros, min_leading_zeros)
+
+    e = 0
+    while (10**e) <= number:
+        digit = int(number // 10**e) % 10
+        wip.append(str(digit))
+        e += 1
 
     if not positive:
         buffer.write("-")
+
+    for _ in range(leading_zeros):
+        buffer.write("0")
 
     recur_from = len(wip) - recurring_count
 

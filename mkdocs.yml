@@ -5,7 +5,7 @@ markdown_extensions:
 
 nav:
   - index.md
-  - fraction.md
+  - rational.md
   - math.md
 
 site_name: Vinculum

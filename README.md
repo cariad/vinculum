@@ -6,7 +6,7 @@
 
 ## Examples
 
-Numbers are recorded as fractions rather than floating-point decimals, so `1.2 - 1.0` really does equal `0.2`.
+Numbers are recorded as rational fractions rather than floating-point decimals, so `1.2 - 1.0` really does equal `0.2`.
 
 Using native `float`:
 
@@ -18,26 +18,26 @@ c = a - b
 print(c)  # 0.19999999999999996
 ```
 
-Using Vinculum [`Fraction`](https://vinculumpy.dev/fraction/):
+Using Vinculum [`Rational`](https://vinculumpy.dev/rational/):
 
 ```python
-from vinculum import Fraction
+from vinculum import Rational
 
-a = Fraction.from_float(1.2)
-b = Fraction.from_float(1.0)
+a = Rational.from_float(1.2)
+b = Rational.from_float(1.0)
 c = a - b
 
 print(c)            # 1/5
 print(c.decimal())  # 0.2
 ```
 
-A `Fraction` can be rendered to any arbitrary number of decimal places, but repeating digits will be noted and rendered with overhead dots:
+A `Rational` can be rendered to any arbitrary number of decimal places, but repeating digits will be noted and rendered with overhead dots:
 
 
 ```python
-from vinculum import Fraction
+from vinculum import Rational
 
-print(Fraction(1146408, 364913).decimal(max_dp=999))
+print(Rational(1146408, 364913).decimal(max_dp=999))
 # 3.141592653591403978482542414219279663919893234825835199074847977463121346731
 # 96076873117702027606580198567877822933137487565529317947017508282796173334466
 # 02340831924321687635134949974377454352133248198885761811719505745205021470871
@@ -52,7 +52,7 @@ print(Fraction(1146408, 364913).decimal(max_dp=999))
 # 86209315645098968795301893876074571199162540112300740176425613776434382989918
 # 14487288751017365783077062203867771222181725507175682971009528298525950020963
 
-print(Fraction(1, 3).decimal())
+print(Rational(1, 3).decimal())
 # 0.̇3
 ```
 

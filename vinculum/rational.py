@@ -15,12 +15,12 @@ DECIMAL_PATTERN = compile(rf"^(-?\d+)(?:\{DECIMAL_POINT}(\d+))?$")
 FRACTION_PATTERN = compile(r"^(\d+)/(\d+)$")
 
 
-class Fraction:
+class Rational:
     """
-    A fractional number.
+    A rational number.
 
-    For example, given the fraction 3/2 (decimal 1.5), the `numerator` is 3 and
-    `denominator` is 2.
+    For example, to describe the rational number 3/2 (decimal 1.5), the
+    `numerator` is 3 and `denominator` is 2.
     """
 
     def __init__(self, numerator: int, denominator: int = 1) -> None:
@@ -31,9 +31,9 @@ class Fraction:
             self._denominator = abs(self._denominator)
             self._numerator = self._numerator * -1
 
-    def __add__(self, other: Any) -> Fraction:
+    def __add__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
-        f = Fraction(a.numerator + b.numerator, a.denominator)
+        f = Rational(a.numerator + b.numerator, a.denominator)
         return f.reduced
 
     def __eq__(self, other: Any) -> bool:
@@ -46,10 +46,10 @@ class Fraction:
     def __float__(self) -> float:
         return self._numerator / self._denominator
 
-    def __floordiv__(self, other: Any) -> Fraction:
+    def __floordiv__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
         true_result = a * b.reciprocal
-        return Fraction(true_result.integral)
+        return Rational(true_result.integral)
 
     def __ge__(self, other: Any) -> bool:
         if isinstance(other, float):
@@ -82,80 +82,80 @@ class Fraction:
         a, b = self.comparable_with_self(other)
         return a.numerator < b.numerator
 
-    def __mul__(self, other: Any) -> Fraction:
-        other = Fraction.from_any(other)
-        result = Fraction(
+    def __mul__(self, other: Any) -> Rational:
+        other = Rational.from_any(other)
+        result = Rational(
             self.numerator * other.numerator,
             self.denominator * other.denominator,
         )
         return result.reduced
 
-    def __radd__(self, other: Any) -> Fraction:
+    def __radd__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
-        f = Fraction(b.numerator + a.numerator, a.denominator)
+        f = Rational(b.numerator + a.numerator, a.denominator)
         return f.reduced
 
     def __repr__(self) -> str:
         return f"{self._numerator}/{self._denominator}"
 
-    def __rfloordiv__(self, other: Any) -> Fraction:
+    def __rfloordiv__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
         true_result = b * a.reciprocal
-        return Fraction(true_result.integral)
+        return Rational(true_result.integral)
 
-    def __rmul__(self, other: Any) -> Fraction:
-        other = Fraction.from_any(other)
-        result = Fraction(
+    def __rmul__(self, other: Any) -> Rational:
+        other = Rational.from_any(other)
+        result = Rational(
             other.numerator * self.numerator,
             other.denominator * self.denominator,
         )
         return result.reduced
 
-    def __rsub__(self, other: Any) -> Fraction:
+    def __rsub__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
-        f = Fraction(b.numerator - a.numerator, a.denominator)
+        f = Rational(b.numerator - a.numerator, a.denominator)
         return f.reduced
 
-    def __rtruediv__(self, other: Any) -> Fraction:
+    def __rtruediv__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
         return b * a.reciprocal
 
-    def __sub__(self, other: Any) -> Fraction:
+    def __sub__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
-        f = Fraction(a.numerator - b.numerator, a.denominator)
+        f = Rational(a.numerator - b.numerator, a.denominator)
         return f.reduced
 
-    def __truediv__(self, other: Any) -> Fraction:
+    def __truediv__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)
         return a * b.reciprocal
 
     @staticmethod
-    def comparable(a: Fraction, b: Fraction) -> tuple[Fraction, Fraction]:
+    def comparable(a: Rational, b: Rational) -> tuple[Rational, Rational]:
         """
-        Converts fractions `a` and `b` to the same denominator.
+        Converts rational numbers `a` and `b` to the same denominator.
         """
 
         if a.denominator == b.denominator:
             return a, b
 
         return (
-            Fraction(
+            Rational(
                 a.numerator * b.denominator,
                 a.denominator * b.denominator,
             ),
-            Fraction(
+            Rational(
                 b.numerator * a.denominator,
                 b.denominator * a.denominator,
             ),
         )
 
-    def comparable_with_self(self, value: Any) -> tuple[Fraction, Fraction]:
+    def comparable_with_self(self, value: Any) -> tuple[Rational, Rational]:
         """
-        Converts this and `value` to Fractions of the same denominator.
+        Converts this and `value` to rational numbers of the same denominator.
         """
 
-        value = Fraction.from_any(value)
-        return Fraction.comparable(self, value)
+        value = Rational.from_any(value)
+        return Rational.comparable(self, value)
 
     def decimal(
         self,
@@ -164,11 +164,11 @@ class Fraction:
         recurring_prefix: Optional[str] = "\u0307",
     ) -> str:
         """
-        Gets the fraction as a decimal string appropriate to the local culture.
-        For example, 3/2 in the United Kingdom is rendered as "1.5".
+        Gets a decimal string that describes this rational number. For example,
+        3/2 in a British English locale is rendered as "1.5".
 
-        Recurring digits are represented by overhead dots. For example, 1/3
-        returns 0.̇3.
+        Recurring digits are styled with overhead dots. For example, 1/3
+        returns "0.̇3".
 
         This function is aware of and avoids CVE-2020-10735:
         https://github.com/python/cpython/issues/95778
@@ -249,15 +249,15 @@ class Fraction:
         """
         Denominator.
 
-        For example, given the fraction 3/2, the denominator is "2".
+        For example, given the rational number 3/2, the denominator is "2".
         """
 
         return self._denominator
 
     @property
-    def fractional(self) -> Fraction:
+    def fractional(self) -> Rational:
         """
-        The fractional part of this number.
+        The fractional part of this rational number.
 
         For example, for 3/2, the integral part is 1 (2/2) and the fractional
         part is 1/2.
@@ -266,32 +266,32 @@ class Fraction:
         return self - self.integral
 
     @classmethod
-    def from_any(cls, value: Any) -> Fraction:
+    def from_any(cls, value: Any) -> Rational:
         """
-        Converts `value` to a Fraction.
+        Converts `value` to a rational number.
 
-        Raises `TypeError` if `value` cannot be converted to a Fraction.
+        Raises `TypeError` if `value` cannot be converted to a rational number.
         """
 
         if isinstance(value, int):
-            return Fraction(value)
+            return Rational(value)
 
         if isinstance(value, float):
-            return Fraction.from_float(value)
+            return Rational.from_float(value)
 
         if isinstance(value, str):
-            return Fraction.from_string(value)
+            return Rational.from_string(value)
 
-        if isinstance(value, Fraction):
+        if isinstance(value, Rational):
             return value
 
         raise TypeError(
-            f"Cannot create a Fraction from {repr(value)} "
+            f"Cannot create a {cls.__name__} from {repr(value)} "
             f"({value.__class__.__name__})"
         )
 
     @classmethod
-    def from_float(cls, f: float) -> Fraction:
+    def from_float(cls, f: float) -> Rational:
         log.debug("Parsing float %s", f)
 
         positive = f >= 0
@@ -299,14 +299,14 @@ class Fraction:
 
         fractional, i = modf(f)
 
-        result = Fraction(int(i))
+        result = Rational(int(i))
         over = 10
 
         while fractional != 0:
             f *= 10
             fractional, i = modf(f)
             digit = int(i) % 10
-            result += Fraction(digit, over)
+            result += Rational(digit, over)
             over *= 10
 
         if not positive:
@@ -315,7 +315,7 @@ class Fraction:
         return result
 
     @classmethod
-    def from_string(cls, string: str) -> Fraction:
+    def from_string(cls, string: str) -> Rational:
         """
         Parses `string` as either a decimal or fraction.
         """
@@ -327,7 +327,7 @@ class Fraction:
             groups = match.groups(0)
 
             i = string_to_int(cast(str, groups[0]))
-            integral = Fraction(i)
+            integral = Rational(i)
 
             decimal_group = groups[1]
 
@@ -339,10 +339,10 @@ class Fraction:
             )
 
             if decimal_group == 0:
-                decimal = Fraction(0)
+                decimal = Rational(0)
             else:
                 d = cast(str, decimal_group)
-                decimal = Fraction(string_to_int(d), 10 ** len(d))
+                decimal = Rational(string_to_int(d), 10 ** len(d))
 
             return (integral + decimal).reduced
 
@@ -369,7 +369,7 @@ class Fraction:
                 denominator_group.__class__.__name__,
             )
 
-            return Fraction(
+            return Rational(
                 string_to_int(cast(str, numerator_group)),
                 string_to_int(cast(str, denominator_group)),
             )
@@ -379,7 +379,7 @@ class Fraction:
     @property
     def integral(self) -> int:
         """
-        The integral part of this number.
+        The integral part of this rational number.
 
         For example, for 3/2, the integral part is 1 (2/2) and the fractional
         part is 1/2.
@@ -392,25 +392,25 @@ class Fraction:
         """
         Numerator.
 
-        For example, given the fraction 3/2, the numerator is "3".
+        For example, given the rational number 3/2, the numerator is "3".
         """
 
         return self._numerator
 
     @property
-    def reciprocal(self) -> Fraction:
+    def reciprocal(self) -> Rational:
         """
-        Gets the reciprocal of the fraction.
+        Gets the reciprocal of the rational number.
 
         For example, the reciprocal of 2/3 is 3/2.
         """
 
-        return Fraction(self.denominator, self.numerator)
+        return Rational(self.denominator, self.numerator)
 
     @property
-    def reduced(self) -> Fraction:
+    def reduced(self) -> Rational:
         """
-        Gets the fraction in its reduced form.
+        Gets the rational number in its reduced form.
 
         For example, 15/30 reduces to 1/2.
         """
@@ -420,7 +420,7 @@ class Fraction:
         if gcf in (0, 1):
             return self
 
-        return Fraction(
+        return Rational(
             self._numerator // gcf,
             self._denominator // gcf,
         )

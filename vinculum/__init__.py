@@ -6,8 +6,8 @@ For usage and support, see https://github.com/cariad/vinculum.
 
 from importlib.resources import files
 
-from vinculum.fraction import Fraction
 from vinculum.math import greatest_common_divisor, int_to_buffer, string_to_int
+from vinculum.rational import Rational
 
 
 def version() -> str:
@@ -20,7 +20,7 @@ def version() -> str:
 
 
 __all__ = [
-    "Fraction",
+    "Rational",
     "greatest_common_divisor",
     "int_to_buffer",
     "string_to_int",

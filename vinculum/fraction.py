@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from io import StringIO
 from locale import localeconv
-from math import modf
+from math import isclose, modf
 from re import compile  # pylint: disable=redefined-builtin
 from typing import Any, List, Optional, cast
 
@@ -37,6 +37,9 @@ class Fraction:
         return f.reduced
 
     def __eq__(self, other: Any) -> bool:
+        if isinstance(other, float):
+            return isclose(float(self), other)
+
         a, b = self.comparable_with_self(other)
         return a.numerator == b.numerator
 
@@ -49,10 +52,16 @@ class Fraction:
         return Fraction(true_result.integral)
 
     def __ge__(self, other: Any) -> bool:
+        if isinstance(other, float):
+            return float(self) >= other
+
         a, b = self.comparable_with_self(other)
         return a.numerator >= b.numerator
 
     def __gt__(self, other: Any) -> bool:
+        if isinstance(other, float):
+            return float(self) > other
+
         a, b = self.comparable_with_self(other)
         return a.numerator > b.numerator
 
@@ -60,10 +69,16 @@ class Fraction:
         return self.integral
 
     def __le__(self, other: Any) -> bool:
+        if isinstance(other, float):
+            return float(self) <= other
+
         a, b = self.comparable_with_self(other)
         return a.numerator <= b.numerator
 
     def __lt__(self, other: Any) -> bool:
+        if isinstance(other, float):
+            return float(self) < other
+
         a, b = self.comparable_with_self(other)
         return a.numerator < b.numerator
 

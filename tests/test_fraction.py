@@ -90,6 +90,7 @@ def test_decimal__pi() -> None:
         (Fraction(8, 4), 2, True),
         (Fraction(5, 4), 1.5, False),
         (Fraction(6, 4), 1.5, True),
+        (Fraction(67, 99), 0.67676767676, True),
         (Fraction(7, 4), Fraction(8, 4), False),
         (Fraction(8, 4), Fraction(8, 4), True),
     ],

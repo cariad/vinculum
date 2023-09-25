@@ -32,6 +32,17 @@ class Rational:
             self._numerator = self._numerator * -1
 
     def __add__(self, other: Any) -> Rational:
+        if other == 0:
+            log.debug("__add__ taking a shortcut to self")
+            return self
+
+        if isinstance(other, int):
+            log.debug("__add__ adding integer %i", other)
+            return Rational(
+                self._numerator + (other * self._denominator),
+                self._denominator,
+            )
+
         a, b = self.comparable_with_self(other)
         f = Rational(a.numerator + b.numerator, a.denominator)
         return f.reduced
@@ -113,6 +124,17 @@ class Rational:
         return result.reduced
 
     def __radd__(self, other: Any) -> Rational:
+        if other == 0:
+            log.debug("__radd__ taking a shortcut to self")
+            return self
+
+        if isinstance(other, int):
+            log.debug("__radd__ adding integer %i", other)
+            return Rational(
+                self._numerator + (other * self._denominator),
+                self._denominator,
+            )
+
         a, b = self.comparable_with_self(other)
         f = Rational(b.numerator + a.numerator, a.denominator)
         return f.reduced

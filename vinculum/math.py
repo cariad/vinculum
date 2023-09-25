@@ -1,11 +1,27 @@
 from io import StringIO
 from typing import List, Optional
 
+from vinculum.log import log
 
-def greatest_common_divisor(a: int, b: int) -> int:
+
+def greatest_common_divisor(
+    a: int,
+    b: int,
+    max_iterations: int | None = None,
+) -> int:
     """
     Gets the greatest common divisor of `a` and `b`.
     """
+
+    log.debug(
+        (
+            "Attempting to discover the greatest common divisor of %i and %i "
+            "within %s iterations"
+        ),
+        a,
+        b,
+        "unlimited" if max_iterations is None else max_iterations,
+    )
 
     biggest = max(a, b)
     smallest = min(a, b)
@@ -13,11 +29,40 @@ def greatest_common_divisor(a: int, b: int) -> int:
     if smallest in (0, biggest):
         return smallest
 
+    count = 0
+
     while True:
         remainder = biggest % smallest
 
         if remainder == 0:
+            if max_iterations is not None:
+                log.debug(
+                    (
+                        "Found the greatest common divisor of %i and "
+                        "%i (%i) on iteration %i"
+                    ),
+                    a,
+                    b,
+                    smallest,
+                    count,
+                )
+
             return smallest
+
+        if max_iterations is not None:
+            count += 1
+            if count > max_iterations:
+                log.debug(
+                    (
+                        "Did not find the greatest common divisor of %i and "
+                        "%i within %i iterations"
+                    ),
+                    a,
+                    b,
+                    max_iterations,
+                )
+
+                return 1
 
         biggest = smallest
         smallest = remainder

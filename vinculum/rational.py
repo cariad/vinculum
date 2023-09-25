@@ -463,7 +463,7 @@ class Rational:
             )
 
             if decimal_group == 0:
-                decimal = Rational.ZERO()
+                decimal = Rational.zero()
             else:
                 d = cast(str, decimal_group)
                 decimal = Rational(string_to_int(d), 10 ** len(d))
@@ -534,15 +534,22 @@ class Rational:
 
         return Rational(self.denominator, self.numerator)
 
-    @property
-    def reduced(self) -> Rational:
+    def reduce(
+        self,
+        max_iterations: int | None = None,
+    ) -> Rational:
         """
-        Gets the rational number in its reduced form.
+        Attempts to reduce the number within `max_iterations`, otherwise
+        returns itself.
 
         For example, 15/30 reduces to 1/2.
         """
 
-        gcf = greatest_common_divisor(self._numerator, self._denominator)
+        gcf = greatest_common_divisor(
+            self._numerator,
+            self._denominator,
+            max_iterations=max_iterations,
+        )
 
         if gcf in (0, 1):
             return self
@@ -552,8 +559,18 @@ class Rational:
             self._denominator // gcf,
         )
 
+    @property
+    def reduced(self) -> Rational:
+        """
+        Gets the rational number in its reduced form.
+
+        For example, 15/30 reduces to 1/2.
+        """
+
+        return self.reduce()
+
     @staticmethod
-    def ZERO() -> Rational:
+    def zero() -> Rational:
         """
         Zero.
         """

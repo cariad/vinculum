@@ -31,19 +31,36 @@ class Rational:
             self._denominator = abs(self._denominator)
             self._numerator = self._numerator * -1
 
-    def __add__(self, other: Any) -> Rational:
-        if other == 0:
+    def __add__(self, right: Any) -> Rational:
+        if right == 0:
             log.debug("__add__ taking a shortcut to self")
             return self
 
-        if isinstance(other, int):
-            log.debug("__add__ adding integer %i", other)
+        if isinstance(right, int):
+            log.debug("__add__ adding integer %i", right)
             return Rational(
-                self._numerator + (other * self._denominator),
+                self._numerator + (right * self._denominator),
                 self._denominator,
             )
 
-        a, b = self.comparable_with_self(other)
+        if isinstance(right, Rational):
+            log.debug("__add__ adding Rational %s", right)
+
+            if self._denominator == right._denominator:
+                return Rational(
+                    self._numerator + right._numerator,
+                    self._denominator,
+                )
+
+            new_self_numerator = self._numerator * right._denominator
+            new_right_numerator = right._numerator * self._denominator
+
+            return Rational(
+                new_self_numerator + new_right_numerator,
+                self._denominator * right._denominator,
+            )
+
+        a, b = self.comparable_with_self(right)
         f = Rational(a.numerator + b.numerator, a.denominator)
         return f.reduced
 
@@ -207,6 +224,12 @@ class Rational:
         if isinstance(right, Rational):
             log.debug("__sub__ subtracting Rational %s", right)
 
+            if self._denominator == right._denominator:
+                return Rational(
+                    self._numerator - right._numerator,
+                    self._denominator,
+                )
+
             new_left_numerator = self._numerator * right._denominator
             new_right_numerator = right._numerator * self._denominator
 
@@ -232,14 +255,16 @@ class Rational:
         if a.denominator == b.denominator:
             return a, b
 
+        d = a.denominator * b.denominator
+
         return (
             Rational(
                 a.numerator * b.denominator,
-                a.denominator * b.denominator,
+                d,
             ),
             Rational(
                 b.numerator * a.denominator,
-                b.denominator * a.denominator,
+                d,
             ),
         )
 

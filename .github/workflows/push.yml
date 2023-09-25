@@ -5,26 +5,7 @@ on:  # yamllint disable-line rule:truthy
       - "**"
 
 jobs:
-  validate-older:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        python-version:
-          # "3.8" is not supported
-          - "3.9"
-          - "3.10"
-
-    steps:
-      - uses: actions/checkout@v2.5.0
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - run: pip install pytest pytest-cov && pytest -vv
-
-  validate-current:
+  validate:
     runs-on: ubuntu-latest
 
     steps:

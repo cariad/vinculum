@@ -15,9 +15,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Typing :: Typed",
 ]
@@ -48,12 +45,12 @@ setup(
         "vinculum": ["py.typed"],
     },
     project_urls={
-        "Documentation": "https://vinculumpy.dev",
+        "Documentation": "https://cariad.github.io/vinculum/",
         "Funding": "https://github.com/sponsors/cariad",
         "Issues": "https://github.com/cariad/vinculum/issues",
         "Source": "https://github.com/cariad/vinculum",
     },
-    python_requires=">=3.9",
+    python_requires=">=3.11",
     url="https://github.com/cariad/vinculum",
     version=curr_version,
 )

@@ -432,6 +432,25 @@ def test_rtruediv(a: Any, b: Rational, expect: Rational) -> None:
 
 
 @mark.parametrize(
+    "rational, expect",
+    [
+        (Rational(1, 2), "1/2"),
+        (
+            # CVE-2020-10735: https://github.com/python/cpython/issues/95778
+            Rational(
+                pow(10, 5_000),
+                pow(10, 5_000),
+            ),
+            "1" + ("0" * 5_000) + "/1" + ("0" * 5_000),
+        ),
+    ],
+)
+def test_str(rational: Rational, expect: str) -> None:
+    result = str(rational)
+    assert result == expect
+
+
+@mark.parametrize(
     "a, b, expect",
     [
         (Rational(4, 3), 1, Rational(1, 3)),

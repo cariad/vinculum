@@ -60,7 +60,7 @@ Note that the latter output is `0.̇3` with a dot and not `0.3`.
 
 ## Installation
 
-**Vinculum** requires Python 3.9 or later:
+**Vinculum** requires Python 3.11 or later:
 
 ```console
 pip install vinculum

@@ -11,9 +11,7 @@ jobs:
     strategy:
       matrix:
         python-version:
-          # "3.8" is not supported
-          - "3.9"
-          - "3.10"
+          - "3.11"
 
     steps:
       - uses: actions/checkout@v2.5.0

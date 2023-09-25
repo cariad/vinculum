@@ -62,7 +62,7 @@ Full documentation is online at **[cariad.github.io/vinculum](https://cariad.git
 
 ## Installation
 
-**Vinculum** requires Python 3.9 or later:
+**Vinculum** requires Python 3.11 or later:
 
 ```console
 pip install vinculum

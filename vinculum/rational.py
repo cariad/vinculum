@@ -84,10 +84,26 @@ class Rational:
 
     def __mul__(self, other: Any) -> Rational:
         if other == 0:
-            return Rational(0)
+            log.debug("__mul__ taking a shortcut to 0")
+            return ZERO
 
         if other == 1:
+            log.debug("__mul__ taking a shortcut to self")
             return self
+
+        if isinstance(other, int):
+            log.debug("__mul__ multiplying by integer %i", other)
+            return Rational(
+                self._numerator * other,
+                self._denominator,
+            )
+
+        if isinstance(other, Rational):
+            log.debug("__mul__ multiplying by Rational %s", other)
+            return Rational(
+                self._numerator * other._numerator,
+                self._denominator * other._denominator,
+            )
 
         other = Rational.from_any(other)
         result = Rational(
@@ -111,10 +127,19 @@ class Rational:
 
     def __rmul__(self, other: Any) -> Rational:
         if other == 0:
-            return Rational(0)
+            log.debug("__rmul__ taking a shortcut to 0")
+            return ZERO
 
         if other == 1:
+            log.debug("__rmul__ taking a shortcut to self")
             return self
+
+        if isinstance(other, int):
+            log.debug("__rmul__ multiplying by integer %i", other)
+            return Rational(
+                self._numerator * other,
+                self._denominator,
+            )
 
         other = Rational.from_any(other)
         result = Rational(
@@ -123,8 +148,8 @@ class Rational:
         )
         return result.reduced
 
-    def __rsub__(self, other: Any) -> Rational:
-        a, b = self.comparable_with_self(other)
+    def __rsub__(self, left: Any) -> Rational:
+        a, b = self.comparable_with_self(left)
         f = Rational(b.numerator - a.numerator, a.denominator)
         return f.reduced
 
@@ -132,8 +157,23 @@ class Rational:
         a, b = self.comparable_with_self(other)
         return b * a.reciprocal
 
-    def __sub__(self, other: Any) -> Rational:
-        a, b = self.comparable_with_self(other)
+    def __sub__(self, right: Any) -> Rational:
+        if right == 0:
+            log.debug("__sub__ taking a shortcut to 0")
+            return self
+
+        if isinstance(right, Rational):
+            log.debug("__sub__ subtracting Rational %s", right)
+
+            new_left_numerator = self._numerator * right._denominator
+            new_right_numerator = right._numerator * self._denominator
+
+            return Rational(
+                new_left_numerator - new_right_numerator,
+                self._denominator * right._denominator,
+            )
+
+        a, b = self.comparable_with_self(right)
         f = Rational(a.numerator - b.numerator, a.denominator)
         return f.reduced
 
@@ -356,7 +396,7 @@ class Rational:
             )
 
             if decimal_group == 0:
-                decimal = Rational(0)
+                decimal = Rational.ZERO()
             else:
                 d = cast(str, decimal_group)
                 decimal = Rational(string_to_int(d), 10 ** len(d))
@@ -444,3 +484,17 @@ class Rational:
             self._numerator // gcf,
             self._denominator // gcf,
         )
+
+    @staticmethod
+    def ZERO() -> Rational:
+        """
+        Zero.
+        """
+
+        return ZERO
+
+
+ZERO = Rational(0)
+"""
+Zero.
+"""

@@ -13,6 +13,7 @@ from vinculum import Rational
         (Rational(2, 3), 1.5, Rational(13, 6)),
         (Rational(2, 3), Rational(4, 6), Rational(4, 3)),
         (Rational(1, 4), Rational(-1, 2), Rational(-1, 4)),
+        (Rational(2, 7), Rational(3, 7), Rational(5, 7)),
     ],
 )
 def test_add(a: Rational, b: Any, expect: Rational) -> None:
@@ -456,6 +457,8 @@ def test_str(rational: Rational, expect: str) -> None:
     "a, b, expect",
     [
         (Rational(4, 3), 1, Rational(1, 3)),
+        (Rational(5, 3), Rational(2, 3), Rational(3, 3)),
+        (Rational(5, 2), Rational(2, 4), Rational(16, 8)),
     ],
 )
 def test_sub(a: Rational, b: Any, expect: Rational) -> None:

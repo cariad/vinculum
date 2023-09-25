@@ -24,9 +24,9 @@ def test_add(a: Rational, b: Any, expect: Rational) -> None:
     "a, b, expect",
     [
         (
-            Rational.ZERO(),
-            Rational.ZERO(),
-            (Rational.ZERO(), Rational.ZERO()),
+            Rational.zero(),
+            Rational.zero(),
+            (Rational.zero(), Rational.zero()),
         ),
         (
             Rational(3, 2),
@@ -62,7 +62,7 @@ def test_comparable_with_self(
 @mark.parametrize(
     "f, expect",
     [
-        (Rational.ZERO(), "0.0"),
+        (Rational.zero(), "0.0"),
         (Rational(1), "1.0"),
         (Rational(2), "2.0"),
         (Rational(10), "10.0"),
@@ -104,7 +104,7 @@ def test_eq(a: Rational, b: Any, expect: bool) -> None:
 @mark.parametrize(
     "f, expect",
     [
-        (Rational.ZERO(), 0),
+        (Rational.zero(), 0),
         (Rational(1), 1),
         (Rational(1, 3), 0.3333333333333333),
     ],
@@ -126,8 +126,8 @@ def test_floordiv(a: Rational, b: Any, expect: Rational) -> None:
 @mark.parametrize(
     "f, expect",
     [
-        (Rational.ZERO(), Rational.ZERO()),
-        (Rational(1), Rational.ZERO()),
+        (Rational.zero(), Rational.zero()),
+        (Rational(1), Rational.zero()),
         (Rational(3, 2), Rational(1, 2)),
     ],
 )
@@ -171,8 +171,8 @@ def test_from_float(f: float, expect: Rational) -> None:
 @mark.parametrize(
     "s, expect",
     [
-        ("0", Rational.ZERO()),
-        ("0.0", Rational.ZERO()),
+        ("0", Rational.zero()),
+        ("0.0", Rational.zero()),
         ("1", Rational(1)),
         ("1.0", Rational(1)),
         ("1.2", Rational(6, 5)),
@@ -180,7 +180,7 @@ def test_from_float(f: float, expect: Rational) -> None:
         ("1.125", Rational(9, 8)),
         ("2.5", Rational(5, 2)),
         ("99.75", Rational(399, 4)),
-        ("0/1", Rational.ZERO()),
+        ("0/1", Rational.zero()),
         ("1/1", Rational(1)),
         ("2/1", Rational(2)),
         ("2/3", Rational(2, 3)),
@@ -256,7 +256,7 @@ def test_init(n: int, d: int, expect_n: int, expect_d: int) -> None:
 @mark.parametrize(
     "f, expect",
     [
-        (Rational.ZERO(), 0),
+        (Rational.zero(), 0),
         (Rational(1), 1),
         (Rational(1, 2), 0),
         (Rational(2, 2), 1),
@@ -310,7 +310,7 @@ def test_lt(a: Rational, b: Any, expect: bool) -> None:
         (
             Rational(1, 2),
             0,
-            Rational.ZERO(),
+            Rational.zero(),
         ),
         (
             Rational(1, 2),
@@ -356,12 +356,48 @@ def test_reciprocal() -> None:
 
 
 @mark.parametrize(
+    "f, max_iterations, expect",
+    [
+        (Rational.zero(), None, Rational.zero()),
+        (Rational(1), None, Rational(1)),
+        (Rational(1, 2), None, Rational(1, 2)),
+        (Rational(15, 30), None, Rational(1, 2)),
+        (
+            Rational(1806, 189),
+            None,
+            Rational(86, 9),
+        ),
+        (
+            Rational(1806, 189),
+            2,
+            Rational(1806, 189),
+        ),
+        (
+            Rational(1806, 189),
+            3,
+            Rational(86, 9),
+        ),
+    ],
+)
+def test_reduce(
+    f: Rational,
+    max_iterations: int | None,
+    expect: Rational,
+) -> None:
+    result = f.reduce(max_iterations=max_iterations)
+
+    # Don't use object equality because it'll reduce even further.
+    assert result.numerator == expect.numerator
+    assert result.denominator == expect.denominator
+
+
+@mark.parametrize(
     "f, expect",
     [
-        (Rational.ZERO(), Rational.ZERO()),
-        (Rational(1), Rational(1)),
-        (Rational(1, 2), Rational(1, 2)),
-        (Rational(15, 30), Rational(1, 2)),
+        (
+            Rational(1806, 189),
+            Rational(86, 9),
+        ),
     ],
 )
 def test_reduced(f: Rational, expect: Rational) -> None:
@@ -388,7 +424,7 @@ def test_rfloordiv(a: Any, b: Rational, expect: Rational) -> None:
         (
             0,
             Rational(1, 2),
-            Rational.ZERO(),
+            Rational.zero(),
         ),
         (
             1,

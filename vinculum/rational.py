@@ -118,7 +118,27 @@ class Rational:
         return f.reduced
 
     def __repr__(self) -> str:
-        return f"{self._numerator}/{self._denominator}"
+        try:
+            return f"{self._numerator}/{self._denominator}"
+        except ValueError:
+            # Raised if CVE-2020-10735
+            # https://github.com/python/cpython/issues/95778 is violated.
+
+            result = StringIO()
+
+            int_to_buffer(
+                self._numerator,
+                result,
+            )
+
+            result.write("/")
+
+            int_to_buffer(
+                self._denominator,
+                result,
+            )
+
+            return result.getvalue()
 
     def __rfloordiv__(self, other: Any) -> Rational:
         a, b = self.comparable_with_self(other)

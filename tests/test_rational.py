@@ -183,10 +183,13 @@ def test_from_float(f: float, expect: Rational) -> None:
         ("2/1", Rational(2)),
         ("2/3", Rational(2, 3)),
         ("123/456", Rational(123, 456)),
+        ("-7", -7),
+        ("-7.3", -7.3),
     ],
 )
-def test_from_string(s: str, expect: Rational) -> None:
-    assert Rational.from_string(s) == expect
+def test_from_string(s: str, expect: Rational | float) -> None:
+    rational = Rational.from_string(s)
+    assert rational == expect
 
 
 def test_from_string__unrecognised() -> None:
@@ -304,6 +307,16 @@ def test_lt(a: Rational, b: Any, expect: bool) -> None:
     [
         (
             Rational(1, 2),
+            0,
+            Rational(0),
+        ),
+        (
+            Rational(1, 2),
+            1,
+            Rational(1, 2),
+        ),
+        (
+            Rational(1, 2),
             2,
             Rational(1),
         ),
@@ -368,6 +381,16 @@ def test_rfloordiv(a: Any, b: Rational, expect: Rational) -> None:
 @mark.parametrize(
     "a, b, expect",
     [
+        (
+            0,
+            Rational(1, 2),
+            Rational(0),
+        ),
+        (
+            1,
+            Rational(1, 2),
+            Rational(1, 2),
+        ),
         (
             2,
             Rational(1, 2),

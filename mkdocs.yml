@@ -9,7 +9,7 @@ nav:
   - math.md
 
 site_name: Vinculum
-site_url: https://vinculumpy.dev/
+site_url: https://cariad.github.io/vinculum/
 
 theme:
   name: material

@@ -1,5 +1,5 @@
 """
-&copy; 2022 Cariad Eccleston and released under the MIT License.
+&copy; 2022-2023 Cariad Eccleston and released under the MIT License.
 
 For usage and support, see https://github.com/cariad/vinculum.
 """

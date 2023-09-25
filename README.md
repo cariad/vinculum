@@ -18,7 +18,7 @@ c = a - b
 print(c)  # 0.19999999999999996
 ```
 
-Using Vinculum [`Rational`](https://vinculumpy.dev/rational/):
+Using Vinculum [`Rational`](https://cariad.github.io/vinculum/rational/):
 
 ```python
 from vinculum import Rational
@@ -58,7 +58,7 @@ print(Rational(1, 3).decimal())
 
 Note that the latter output is `0.̇3` with a dot and not `0.3`.
 
-Full documentation is online at **[vinculumpy.dev](https://vinculumpy.dev)**.
+Full documentation is online at **[cariad.github.io/vinculum](https://cariad.github.io/vinculum/)**.
 
 ## Installation
 
@@ -74,8 +74,8 @@ Please raise bugs, feature requests and ask questions at [github.com/cariad/vinc
 
 ## The Project
 
-**Bounden** is &copy; 2022 Cariad Eccleston and released under the [MIT License](https://github.com/cariad/vinculum/blob/main/LICENSE) at [github.com/cariad/vinculum](https://github.com/cariad/vinculum).
+**Vinculum** is &copy; 2022-2023 Cariad Eccleston and released under the [MIT License](https://github.com/cariad/vinculum/blob/main/LICENSE) at [github.com/cariad/vinculum](https://github.com/cariad/vinculum).
 
 ## The Author
 
-Hello! 👋 I'm **Cariad Eccleston** and I'm a freelance backend and infrastructure engineer in the United Kingdom. You can find me at [cariad.earth](https://cariad.earth), [github/cariad](https://github.com/cariad), [linkedin/cariad](https://linkedin.com/in/cariad) and on Mastodon at [@cariad@tech.lgbt](https://tech.lgbt/@cariad).
+Hello! 👋 I'm **Cariad Eccleston** and I'm a freelance backend and infrastructure engineer in the United Kingdom. You can find me at [cariad.earth](https://cariad.earth), [github/cariad](https://github.com/cariad), [linkedin/cariad](https://linkedin.com/in/cariad) and on the Fediverse at [@cariad@hachyderm.io](https://hachyderm.io/@cariad).

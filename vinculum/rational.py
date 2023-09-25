@@ -83,6 +83,12 @@ class Rational:
         return a.numerator < b.numerator
 
     def __mul__(self, other: Any) -> Rational:
+        if other == 0:
+            return Rational(0)
+
+        if other == 1:
+            return self
+
         other = Rational.from_any(other)
         result = Rational(
             self.numerator * other.numerator,
@@ -104,6 +110,12 @@ class Rational:
         return Rational(true_result.integral)
 
     def __rmul__(self, other: Any) -> Rational:
+        if other == 0:
+            return Rational(0)
+
+        if other == 1:
+            return self
+
         other = Rational.from_any(other)
         result = Rational(
             other.numerator * self.numerator,
@@ -326,8 +338,13 @@ class Rational:
 
             groups = match.groups(0)
 
-            i = string_to_int(cast(str, groups[0]))
-            integral = Rational(i)
+            integral_str = cast(str, groups[0])
+
+            if negative := string.startswith("-"):
+                integral_str = integral_str[1:]
+
+            integral_int = string_to_int(integral_str)
+            integral = Rational(integral_int)
 
             decimal_group = groups[1]
 
@@ -344,7 +361,10 @@ class Rational:
                 d = cast(str, decimal_group)
                 decimal = Rational(string_to_int(d), 10 ** len(d))
 
-            return (integral + decimal).reduced
+            absolute = integral + decimal
+            multiplier = -1 if negative else 1
+
+            return (absolute * multiplier).reduced
 
         match = FRACTION_PATTERN.match(string)
         if match is not None:

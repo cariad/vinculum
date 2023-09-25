@@ -8,6 +8,7 @@ from vinculum import Rational
 @mark.parametrize(
     "a, b, expect",
     [
+        (Rational(2, 3), 0, Rational(2, 3)),
         (Rational(2, 3), 1, Rational(5, 3)),
         (Rational(2, 3), 1.5, Rational(13, 6)),
         (Rational(2, 3), Rational(4, 6), Rational(4, 3)),
@@ -340,6 +341,7 @@ def test_mul(a: Rational, b: Any, expect: Rational) -> None:
 @mark.parametrize(
     "a, b, expect",
     [
+        (0, Rational(2, 3), Rational(2, 3)),
         (1, Rational(2, 3), Rational(5, 3)),
         (1.5, Rational(2, 3), Rational(13, 6)),
     ],
